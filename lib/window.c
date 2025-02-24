@@ -1,18 +1,48 @@
-// window.c
 #include <windows.h>
+#include <string.h>
 
-// Window Procedure function
+char selectedMenuItem[256] = "";
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
+    case WM_COMMAND:
+        switch (LOWORD(wParam)) {
+        case 1: // Open
+            strcpy(selectedMenuItem, "Open");
+            PostQuitMessage(0);
+            return 0;
+        case 2: // Save
+            strcpy(selectedMenuItem, "Save");
+            PostQuitMessage(0);
+            return 0;
+        case 3: // Exit
+            strcpy(selectedMenuItem, "Exit");
+            PostQuitMessage(0);
+            return 0;
+        }
+        break;
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
     default:
         return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }
+    return 0;
 }
 
-void CreateMyWindow(const char* title) {
+HMENU CreateMyMenu() {
+    HMENU hMenu = CreateMenu();
+    HMENU hFileMenu = CreateMenu();
+    AppendMenu(hFileMenu, MF_STRING, 1, "Open");
+    AppendMenu(hFileMenu, MF_STRING, 2, "Save");
+    AppendMenu(hFileMenu, MF_STRING, 3, "Exit");
+
+    AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "File");
+
+    return hMenu;
+}
+
+const char* CreateMyWindow(const char* title) {
     HINSTANCE hInstance = GetModuleHandle(NULL);
     const char CLASS_NAME[] = "My Window Class";
 
@@ -36,9 +66,10 @@ void CreateMyWindow(const char* title) {
     );
 
     if (hwnd == NULL) {
-        return;
+        return NULL;
     }
 
+    SetMenu(hwnd, CreateMyMenu());
     ShowWindow(hwnd, SW_SHOW);
 
     MSG msg = {0};
@@ -46,4 +77,6 @@ void CreateMyWindow(const char* title) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+
+    return selectedMenuItem;
 }
