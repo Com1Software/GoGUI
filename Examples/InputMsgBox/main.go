@@ -4,7 +4,7 @@ package main
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../lib/inputbox.c"
+#include "../../lib/inputmsgbox.c"
 */
 import "C"
 import (
@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	title := C.CString("My First Wino")
+	title := C.CString("Input Message Box")
 	defer C.free(unsafe.Pointer(title))
 
 	// Call the C function to create the input window and get the user input
