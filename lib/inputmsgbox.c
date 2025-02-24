@@ -41,7 +41,7 @@ const char* CreateInputWindow(const char* title) {
     RegisterClass(&wc);
 
     HWND hwnd = CreateWindowEx(0, TEXT("InputBoxApp"), title,
-                               WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 350, 70,
+                               WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 400, 200,
                                NULL, NULL, hInstance, NULL);
 
     ShowWindow(hwnd, SW_SHOWNORMAL);
