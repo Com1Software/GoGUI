@@ -5,22 +5,25 @@ char selectedMenuItem[256] = "";
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
-    case WM_COMMAND:
-        switch (LOWORD(wParam)) {
-        case 1: // Open
-            strcpy(selectedMenuItem, "Open");
-            PostQuitMessage(0);
-            return 0;
-        case 2: // Save
-            strcpy(selectedMenuItem, "Save");
-            PostQuitMessage(0);
-            return 0;
-        case 3: // Exit
-            strcpy(selectedMenuItem, "Exit");
-            PostQuitMessage(0);
-            return 0;
+    case WM_COMMAND: {
+        MENUITEMINFO mii;
+        char menuText[256];
+        
+        HMENU hMenu = GetMenu(hwnd);
+        mii.cbSize = sizeof(MENUITEMINFO);
+        mii.fMask = MIIM_STRING;
+        mii.dwTypeData = menuText;
+        mii.cch = sizeof(menuText) / sizeof(menuText[0]);
+
+        if (GetMenuItemInfo(hMenu, LOWORD(wParam), FALSE, &mii)) {
+            strcpy_s(selectedMenuItem, sizeof(selectedMenuItem), menuText);
+        } else {
+            strcpy_s(selectedMenuItem, sizeof(selectedMenuItem), "Unknown");
         }
-        break;
+
+        PostQuitMessage(0);
+        return 0;
+    }
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
@@ -30,19 +33,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     return 0;
 }
 
-HMENU CreateMyMenu() {
+HMENU CreateMyMenu(int itemCount, const char** items) {
     HMENU hMenu = CreateMenu();
     HMENU hFileMenu = CreateMenu();
-    AppendMenu(hFileMenu, MF_STRING, 1, "Open");
-    AppendMenu(hFileMenu, MF_STRING, 2, "Save");
-    AppendMenu(hFileMenu, MF_STRING, 3, "Exit");
+    
+    for (int i = 0; i < itemCount; i++) {
+        AppendMenu(hFileMenu, MF_STRING, i + 1, items[i]);
+    }
 
     AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "File");
 
     return hMenu;
 }
 
-const char* CreateMyWindow(const char* title) {
+const char* CreateMyWindow(const char* title, int itemCount, const char** items) {
     HINSTANCE hInstance = GetModuleHandle(NULL);
     const char CLASS_NAME[] = "My Window Class";
 
@@ -69,7 +73,7 @@ const char* CreateMyWindow(const char* title) {
         return NULL;
     }
 
-    SetMenu(hwnd, CreateMyMenu());
+    SetMenu(hwnd, CreateMyMenu(itemCount, items));
     ShowWindow(hwnd, SW_SHOW);
 
     MSG msg = {0};
