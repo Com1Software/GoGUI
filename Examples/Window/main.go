@@ -6,10 +6,14 @@ package main
 #include "../../lib/window.c"
 */
 import "C"
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
 func main() {
 	title := C.CString("My First Window")
 	defer C.free(unsafe.Pointer(title))
-	C.CreateMyWindow(title)
+	selectedItem := C.CreateMyWindow(title)
+	fmt.Printf("Selected Menu Item: %s\n", C.GoString(selectedItem))
 }
