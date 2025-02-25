@@ -7,6 +7,7 @@ void MsgBox(const char* name, const char* title) {
     MessageBox(NULL, name, title, MB_OK);
 }
 #else
+#include <stdlib.h>
 #include <stdio.h>
 void MsgBox(const char* name, const char* title) {
     printf("%s: %s\n", title, name);
