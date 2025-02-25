@@ -7,8 +7,8 @@ void MsgBox(const char* name, const char* title) {
     MessageBox(NULL, name, title, MB_OK);
 }
 #else
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 void MsgBox(const char* name, const char* title) {
     printf("%s: %s\n", title, name);
 }
@@ -17,6 +17,7 @@ void MsgBox(const char* name, const char* title) {
 import "C"
 import (
     "unsafe"
+    "fmt"
 )
 
 func main() {
@@ -25,6 +26,8 @@ func main() {
     defer C.free(unsafe.Pointer(name))
     defer C.free(unsafe.Pointer(title))
 
+    fmt.Println("Calling MsgBox function...")
     // Call the C function to display the message box
     C.MsgBox(name, title)
+    fmt.Println("MsgBox function called.")
 }
