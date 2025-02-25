@@ -1,32 +1,27 @@
 package main
 
 import (
-    "os"
-
-    "github.com/mattn/go-gtk/gtk"
+    "fyne.io/fyne/v2/app"
+    "fyne.io/fyne/v2/container"
+    "fyne.io/fyne/v2/widget"
 )
 
 func main() {
-    // Initialize GTK
-    gtk.Init(&os.Args)
+    // Create a new application
+    a := app.New()
 
     // Create a new window
-    window := gtk.NewWindow(gtk.WINDOW_TOPLEVEL)
-    window.SetTitle("Hello, World!")
-    window.Connect("destroy", gtk.MainQuit)
+    w := a.NewWindow("Hello, World!")
 
-    // Create a new label
-    label := gtk.NewLabel("Hello, World!")
+    // Create a new label with "Hello, World!" text
+    label := widget.NewLabel("Hello, World!")
 
-    // Add the label to the window
-    window.Add(label)
+    // Set the content of the window to the label
+    w.SetContent(container.NewCenter(label))
 
     // Set the window size
-    window.SetSizeRequest(300, 200)
+    w.Resize(fyne.NewSize(300, 200))
 
-    // Show all widgets in the window
-    window.ShowAll()
-
-    // Start the GTK main loop
-    gtk.Main()
+    // Show and run the application
+    w.ShowAndRun()
 }
