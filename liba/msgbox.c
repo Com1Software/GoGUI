@@ -1,7 +1,6 @@
-// msgbox.c
 #include <windows.h>
-#include <stdio.h>
 
-void MsgBox(const char* name, const char* title) {
+// Rename the function to avoid conflicts
+void SimpleMsgBox(const char* name, const char* title) {
     MessageBox(NULL, name, title, MB_OK);
-  }
+}

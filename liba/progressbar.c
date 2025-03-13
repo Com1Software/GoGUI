@@ -6,7 +6,8 @@
 HWND hwndProgress;
 int progressValue = 0;
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+// Rename the window procedure to avoid conflicts
+LRESULT CALLBACK ProgressBarProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
     case WM_CREATE:
         InitCommonControls();
@@ -32,7 +33,7 @@ void UpdateProgressBar(int value) {
 int ShowProgressBar(HINSTANCE hInstance) {
     const wchar_t CLASS_NAME[] = L"ProgressBarWindowClass";
     WNDCLASSW wc = { };
-    wc.lpfnWndProc = WindowProc;
+    wc.lpfnWndProc = ProgressBarProc; // Use the renamed procedure
     wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
 

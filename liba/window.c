@@ -28,7 +28,9 @@ HMENU CreateMyMenu() {
     AppendMenu(hFileMenu, MF_STRING, 2, "Multi-Line Input");
     AppendMenu(hFileMenu, MF_STRING, 3, "Listbox");
     AppendMenu(hFileMenu, MF_STRING, 4, "Message Box");
-    AppendMenu(hFileMenu, MF_STRING, 5, "Exit");
+    AppendMenu(hFileMenu, MF_STRING, 5, "Progress Bar");
+    AppendMenu(hFileMenu, MF_STRING, 6, "Yes/No Message Box");
+    AppendMenu(hFileMenu, MF_STRING, 7, "Exit");
 
     AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "File");
     return hMenu;
