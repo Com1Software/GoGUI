@@ -1,18 +1,33 @@
 package main
 
 /*
+#cgo LDFLAGS: -lcomctl32
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../liba/window.c"
 #include "../../liba/inputmsgbox.c"
 #include "../../liba/inputmemomsgbox.c"
 #include "../../liba/listbox.c"
+#include "../../liba/progressbar.c"
 #include "../../liba/msgbox.c"
+#include "../../liba/yesnomsgbox.c"
+
+extern void UpdateProgressBar(int value);
+
+static int runProgressBar() {
+    HINSTANCE hInstance = GetModuleHandle(NULL);
+    return ShowProgressBar(hInstance);
+}
+
+void cUpdateProgressBar(int value) {
+    UpdateProgressBar(value);
+}
 */
 import "C"
 import (
 	"fmt"
 	"os"
+	"time"
 	"unsafe"
 )
 
@@ -49,13 +64,30 @@ func main() {
 
 		result := C.CreateListBoxWindow(listTitle, &cItems[0])
 		fmt.Printf("Selected Item: %s\n", C.GoString(result))
-	case "4": // Message Box
+	case "4": // Simple Message Box
 		msgBoxTitle := C.CString("Message Box Test")
 		message := C.CString("Hello from the Message Box!")
 		defer C.free(unsafe.Pointer(msgBoxTitle))
 		defer C.free(unsafe.Pointer(message))
-		C.MsgBox(message, msgBoxTitle)
-	case "5": // Exit
+		C.SimpleMsgBox(message, msgBoxTitle)
+	case "5": // Progress Bar
+		go func() {
+			C.runProgressBar()
+		}()
+		for i := 0; i <= 100; i++ {
+			C.cUpdateProgressBar(C.int(i))
+			time.Sleep(100 * time.Millisecond)
+			fmt.Printf("Progress: %d%%\n", i)
+		}
+	case "6": // Yes/No Message Box
+		yesNoTitle := C.CString("Yes/No Message Box")
+		yesNoMessage := C.CString("Do you like this application?")
+		defer C.free(unsafe.Pointer(yesNoTitle))
+		defer C.free(unsafe.Pointer(yesNoMessage))
+
+		result := C.MsgBox(yesNoMessage, yesNoTitle)
+		fmt.Printf("User Selected: %s\n", C.GoString(result))
+	case "7": // Exit
 		fmt.Println("Exiting program.")
 		os.Exit(0)
 	default:
